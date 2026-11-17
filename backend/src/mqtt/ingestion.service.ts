@@ -74,13 +74,17 @@ export class IngestionService {
     motor: MotorIdentityPayload | undefined,
   ): Promise<void> {
     if (motor && motor.detected === false) {
-      await manager.update(Device, { id: deviceId }, {
-        motorManufacturer: null,
-        motorModel: null,
-        motorProtocol: null,
-        motorSerialNo: null,
-        motorDetectedAt: null,
-      });
+      await manager.update(
+        Device,
+        { id: deviceId },
+        {
+          motorManufacturer: null,
+          motorModel: null,
+          motorProtocol: null,
+          motorSerialNo: null,
+          motorDetectedAt: null,
+        },
+      );
       return;
     }
     if (

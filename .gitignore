@@ -31,6 +31,9 @@ compile_commands.json
 # JWT access/refresh token pair. Keep the actual *.py/*.ps1 bench tools in that
 # directory; just don't let their throwaway JSON output get committed again.
 firmware/_gate/*.json
+firmware/_gate/*/build/
+firmware/_gate/*/managed_components/
+firmware/_gate/*/sdkconfig*
 tools/tmp_*.json
 
 # OS/editor noise

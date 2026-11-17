@@ -15,7 +15,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 HMI = ROOT / "RMP_HMI"
-ASSETS = HMI / "DGUS_Assets_v2"
+ASSETS = HMI / "archive" / "legacy-240x320" / "DGUS_Assets_v2"
 BACKGROUND_ASSETS = ASSETS / "01_backgrounds_bmp"
 OUT = HMI / "DGUS_Assets_320x480_DRAFT"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -93,9 +93,9 @@ manifest = {
         "interface": "TTL/CMOS UART2, 8N1, 115200 typical",
         "source": "https://www.dwin-global.com/3-5-inch-smart-lcm-dmg48320c035_03wcommercial-grade-product/",
     },
-    "legacy_source": {"width": OLD_W, "height": OLD_H, "project": "RMP_HMI/DWprj.hmi"},
+    "legacy_source": {"width": OLD_W, "height": OLD_H, "project": "RMP_HMI/archive/legacy-240x320/DWprj.hmi"},
     "pages": [{"id": p, "name": n, "background": f"{p}.bmp"} for p, n in pages],
-    "coordinate_transform": {"x_scale": SX, "y_scale": SY, "rounding": "nearest pixel", "source": "RMP_HMI/DGUS_Assets_v2/VP_map.csv"},
+    "coordinate_transform": {"x_scale": SX, "y_scale": SY, "rounding": "nearest pixel", "source": "RMP_HMI/archive/legacy-240x320/DGUS_Assets_v2/VP_map.csv"},
     "navigation": {
         "buttons": {"0": "MODE", "1": "UP", "2": "DOWN", "3": "SELECT"},
         "edge_behavior": "stop; no wrap-around",
@@ -117,7 +117,7 @@ manifest = {
     "Generated from the legacy 240x320 package by `tools/migrate_dgus_320x480.py`.\n"
     "The BMP backgrounds are geometric drafts only; do not release them without UI/UX review.\n"
     "Use `VP_map_320x480.csv` and `layout_320x480.json` to rebuild the final DGUS project in DGUS Designer.\n"
-    "The legacy binary `RMP_HMI/DWIN_SET` is intentionally not overwritten.\n",
+    "The legacy binary `RMP_HMI/archive/legacy-240x320/DWIN_SET` is intentionally not overwritten.\n",
     encoding="utf-8",
 )
 print(f"generated {OUT}")

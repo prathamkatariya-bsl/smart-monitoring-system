@@ -146,7 +146,7 @@ The frontend build still emits a non-failing bundle-size warning: the main minif
 - Added firmware-owned navigation VPs `0x1320` through `0x1323`. They synchronize focus, the three-row diagnostics window, and assignment state under one UART critical section.
 - Diagnostics now implements nine rows with a three-row sliding window. UP/DOWN moves within the window first, then shifts the window while keeping the edge row focused.
 - MODE is intentionally ignored while a critical alarm or running process is active so a pharmaceutical operator cannot hide a safety state or make an active process appear idle.
-- Added `RMP_HMI/DGUS_Assets_320x480_DRAFT/`, a generated 320x480 coordinate map, project metadata and draft backgrounds. The legacy binary `DWIN_SET` was not overwritten because the final DGUS export must be rebuilt and bench-tested by the UI/UX team on the exact panel.
+- Added `RMP_HMI/DGUS_Assets_320x480_DRAFT/`, a generated 320x480 coordinate map, project metadata and draft backgrounds. Superseded 240x320 assets are segregated under `RMP_HMI/archive/legacy-240x320/`; the legacy binary `DWIN_SET` was not overwritten because the final DGUS export must be rebuilt and bench-tested by the UI/UX team on the exact panel.
 
 ### HMI verification
 
@@ -171,3 +171,11 @@ The frontend build still emits a non-failing bundle-size warning: the main minif
 - Migration `MotorIdentity1730000000014` ran successfully on the live sandbox PostgreSQL database; all five current motor columns and `device_motor_identity` were verified.
 - Live Mosquitto smoke test published an IKA heartbeat, confirmed current-device persistence and history creation, repeated it to confirm observation coalescing, then published a Heidolph heartbeat and confirmed current identity replacement plus two retained historical identities.
 - ESP-IDF firmware compilation and physical RS-232 tests remain required on the target hardware/toolchain; they were not possible in this sandbox.
+
+
+## Documentation and repository cleanup
+
+- Added the canonical documentation set under `docs/` for architecture, backend, frontend, firmware, HMI, deployment, testing, security, operations and pharmaceutical validation.
+- Added `docs/change-log/` with dated records of production hardening, HMI migration, dual-motor detection and this cleanup.
+- Moved superseded architecture and 240x320 HMI material into explicit archive directories; archived documents are retained for traceability but are not current release instructions.
+- Removed dependency trees, ESP-IDF build output, downloaded managed components, frontend build output and internal planning artifacts from the working tree. They are reproducible from lockfiles and toolchain instructions.

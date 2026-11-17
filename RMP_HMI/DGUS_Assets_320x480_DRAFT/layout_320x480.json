@@ -12,7 +12,7 @@
   "legacy_source": {
     "width": 240,
     "height": 320,
-    "project": "RMP_HMI/DWprj.hmi"
+    "project": "RMP_HMI/archive/legacy-240x320/DWprj.hmi"
   },
   "pages": [
     {
@@ -70,7 +70,7 @@
     "x_scale": 1.3333333333333333,
     "y_scale": 1.5,
     "rounding": "nearest pixel",
-    "source": "RMP_HMI/DGUS_Assets_v2/VP_map.csv"
+    "source": "RMP_HMI/archive/legacy-240x320/DGUS_Assets_v2/VP_map.csv"
   },
   "navigation": {
     "buttons": {

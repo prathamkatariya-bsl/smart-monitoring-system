@@ -1,7 +1,7 @@
-# DWIN DMG48320C035_03WN migration
+# DWIN 320×480 HMI package
 
-The original `RMP_HMI` package targets 240x320. The production target is the DWIN DMG48320C035_03WN commercial-grade 320x480 portrait panel.
+The active HMI target is the DWIN DMG48320C035_03WN portrait panel at 320×480. The current migration contract is in `DGUS_Assets_320x480_DRAFT/` and includes draft backgrounds, `layout_320x480.json`, `VP_map_320x480.csv` and DGUS project metadata.
 
-Use `DGUS_Assets_320x480_DRAFT/layout_320x480.json` and `VP_map_320x480.csv` as the source-of-truth migration contract. The generated BMPs are draft geometric conversions for UI/UX review; they are not a final pharmaceutical release artwork package. The original `DWIN_SET` remains unchanged until the final DGUS project is exported and bench-tested on the exact panel.
+The draft package is a geometry and interaction contract for UI/UX review. It is not a final pharmaceutical release package until the DGUS tool generates the panel binaries and the result is bench-tested on the exact display. Superseded 240×320 material is retained under `archive/legacy-240x320/` and is not an active source of truth.
 
-The firmware owns MODE/UP/DOWN/SELECT navigation, 25 ms debounce, 500 ms hold-to-repeat, stop-at-edge focus behavior, and the three-row diagnostics window. DGUS should bind its highlight/list controls to VPs `0x1320`–`0x1323`.
+Use [`../docs/hmi.md`](../docs/hmi.md) for the navigation contract, release workflow and validation checklist.
