@@ -73,6 +73,11 @@ export interface Device {
   fwP4?: string | null;
   fwC6?: string | null;
   dwinProjectVer?: string | null;
+  motorManufacturer?: string | null;
+  motorModel?: string | null;
+  motorProtocol?: string | null;
+  motorSerialNo?: string | null;
+  motorDetectedAt?: string | null;
   lastSeen?: string | null;
   clockSource?: string | null;
   lastNtpSync?: string | null;

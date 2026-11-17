@@ -542,9 +542,27 @@ static void samplerTask(void *) {
     float t_eval = isfinite(t_cal) ? t_cal : t_raw;
     g_current_temp = t_eval;
 
-    float rpm = 0.0f, tq = 0.0f;
-    bool motor_ok = false;
+    rmp::MotorData motor_data{};
+    bool motor_ok = g_motor.poll(motor_data);
+    float rpm = motor_ok ? motor_data.rpm : 0.0f;
+    float tq = motor_ok ? motor_data.tq_ncm : 0.0f;
     float rate = 0.0f;
+
+    if (g_motor.identityChanged() && g_mqtt.isConnected()) {
+      const auto &mi = g_motor.identity();
+      char detail[256];
+      char serial_json[64] = "null";
+      if (mi.serial[0])
+        snprintf(serial_json, sizeof(serial_json), "\"%s\"", mi.serial);
+      snprintf(detail, sizeof(detail),
+               "{\"manufacturer\":\"%s\",\"model\":\"%s\",\"protocol\":\"%s\",\"serial\":%s}",
+               mi.manufacturer, mi.model, rmp::motorProtocolName(mi.protocol),
+               serial_json);
+      g_mqtt.publishEvent("MOTOR_IDENTIFIED", g_boot, (uint32_t)now_ms,
+                          rmp::TimeSync::utcMs(), g_time.state() == rmp::T_SYNCED,
+                          detail);
+      g_motor.clearIdentityChanged();
+    }
 
     // Local Rate-of-Change (RoC) & Safety Alarm Check
     if (rf == 0 && isfinite(t_eval)) {
@@ -711,8 +729,9 @@ static void samplerTask(void *) {
     rec.t_raw = (rf == 0 ? t_raw : NAN);
     rec.rpm = (uint16_t)rpm;
     rec.tq_x10 = (int16_t)lroundf(tq * 10.0f);
-    rec.q = (rf == 0 ? 0 : 2); // 0=G, 2=B
-    rec.flt = rf;
+    rec.q = (rf == 0 ? 0 : 2) | ((motor_ok ? 0 : 2) << 2) |
+            ((motor_ok ? 0 : 2) << 4);
+    rec.flt = motor_ok ? motor_data.flt : 0;
     rec.flags = 0;
     rec.boot = (uint16_t)g_boot;
 
@@ -808,7 +827,12 @@ static void netMqttTask(void *) {
     }
 
     if (g_mqtt.isConnected() && !g_decommissioned) {
-      g_mqtt.publishState("wifi", g_boot);
+      const auto &mi = g_motor.identity();
+      g_mqtt.publishState(
+          "wifi", g_boot, mi.detected ? mi.manufacturer : nullptr,
+          mi.detected ? mi.model : nullptr,
+          mi.detected ? rmp::motorProtocolName(mi.protocol) : nullptr,
+          mi.detected ? mi.serial : nullptr);
 
       // Drain live batches from ring buffer
       rmp::RingStore::View view;
@@ -1153,7 +1177,9 @@ extern "C" void app_main() {
   g_dwin.showBootPage(75, nullptr);
   vTaskDelay(pdMS_TO_TICKS(150));
 
-  // Step 4: Motor & Communication (100%)
+  // Step 4: Motor & Communication (100%). Discovery uses only read-only
+  // commands; it never starts, stops, resets or changes a motor setpoint.
+  g_motor.begin();
   g_dwin.showBootPage(100, nullptr);
   vTaskDelay(pdMS_TO_TICKS(300)); // Brief pause so user sees 100% complete
 

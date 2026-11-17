@@ -8,6 +8,7 @@ import {
   BatchPayload,
   DeviceEventPayload,
   DeviceStatePayload,
+  MotorIdentityPayload,
   FLAG_BITS,
 } from './mqtt.types';
 import { Device } from '../devices/entities/device.entity';
@@ -67,6 +68,73 @@ export class IngestionService {
     return topic.split('/')[2];
   }
 
+  private async recordMotorIdentity(
+    manager: EntityManager,
+    deviceId: string,
+    motor: MotorIdentityPayload | undefined,
+  ): Promise<void> {
+    if (motor && motor.detected === false) {
+      await manager.update(Device, { id: deviceId }, {
+        motorManufacturer: null,
+        motorModel: null,
+        motorProtocol: null,
+        motorSerialNo: null,
+        motorDetectedAt: null,
+      });
+      return;
+    }
+    if (
+      !motor?.detected ||
+      !motor.manufacturer ||
+      !motor.model ||
+      !motor.protocol
+    )
+      return;
+    const manufacturer = motor.manufacturer.trim().slice(0, 32);
+    const model = motor.model.trim().slice(0, 128);
+    const protocol = motor.protocol.trim().slice(0, 64);
+    const serialNo =
+      typeof motor.serial === 'string' ? motor.serial.trim().slice(0, 128) : '';
+    if (!manufacturer || !model || !protocol) return;
+    const seenAt = new Date();
+    await manager.update(
+      Device,
+      { id: deviceId },
+      {
+        motorManufacturer: manufacturer,
+        motorModel: model,
+        motorProtocol: protocol,
+        motorSerialNo: serialNo || null,
+        motorDetectedAt: seenAt,
+      },
+    );
+    await manager.query(
+      `INSERT INTO device_motor_identity
+        (id, device_id, manufacturer, model, protocol, serial_no, first_seen, last_seen, observation_count, raw_identity)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $7, 1, $8::jsonb)
+       ON CONFLICT (device_id, manufacturer, model, protocol, serial_no)
+       DO UPDATE SET last_seen = EXCLUDED.last_seen,
+         observation_count = device_motor_identity.observation_count + 1,
+         raw_identity = EXCLUDED.raw_identity`,
+      [
+        newId(),
+        deviceId,
+        manufacturer,
+        model,
+        protocol,
+        serialNo,
+        seenAt,
+        JSON.stringify({
+          detected: true,
+          manufacturer,
+          model,
+          protocol,
+          serial: serialNo || null,
+        }),
+      ],
+    );
+  }
+
   private async onState(topic: string, payload: Buffer): Promise<void> {
     const deviceId = this.deviceIdFromTopic(topic);
     let parsed: DeviceStatePayload;
@@ -120,6 +188,7 @@ export class IngestionService {
           `Auto-registered new hardware board ${deviceId} (${device.serialNo})`,
         );
       }
+      await this.recordMotorIdentity(manager, deviceId, parsed.motor);
       // Lock order: Device row, then DeviceState row -- must match onBatch()'s
       // order exactly, or concurrent state/batch messages for the same device
       // can deadlock (see the longer comment in onBatch()).
@@ -141,6 +210,14 @@ export class IngestionService {
       this.notifications.broadcast('device_status', {
         deviceId,
         online: parsed.online,
+        motor: parsed.motor?.detected
+          ? {
+              manufacturer: parsed.motor.manufacturer,
+              model: parsed.motor.model,
+              protocol: parsed.motor.protocol,
+              serial: parsed.motor.serial ?? null,
+            }
+          : null,
       });
     });
   }
@@ -423,6 +500,17 @@ export class IngestionService {
         type: event.type,
         detailJson: event as unknown as Record<string, unknown>,
       });
+
+      if (
+        event.type === 'MOTOR_IDENTIFIED' &&
+        event.detail &&
+        typeof event.detail === 'object'
+      ) {
+        await this.recordMotorIdentity(manager, deviceId, {
+          detected: true,
+          ...(event.detail as Record<string, unknown>),
+        } as MotorIdentityPayload);
+      }
 
       // Part 7.5: a TIME_ANCHOR event is the device confirming it has
       // resynced to real NTP time; record it on the device record.

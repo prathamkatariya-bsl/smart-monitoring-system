@@ -154,3 +154,20 @@ The frontend build still emits a non-failing bundle-size warning: the main minif
 - Validated all scaled VP rectangles stay inside the 320x480 panel bounds.
 - `git diff --check` reports only the pre-existing user-edited trailing blank line in this status file.
 - ESP-IDF compilation could not be executed in this sandbox because `idf.py`, CMake and Ninja are unavailable. No firmware was flashed. The existing Windows `.exe` host-test binaries are not executable on this Linux sandbox; they must be rebuilt and run in the target toolchain.
+
+## Dual Heidolph / IKA motor detection
+
+- Replaced the Heidolph-only firmware driver with a read-only `MotorManager` that detects IKA EUROSTAR using the documented 9600 7E1 profile and `IN_NAME`/`IN_PV_4`/`IN_PV_5`, or Heidolph using the existing 9600 8N1 profile and read-only `T`/`Q`/`r`/`m`/`f` commands.
+- Detection is fail-safe: no `START_4`, `STOP_4`, `RESET`, `OUT_*`, setpoint or control command is sent. Unknown hardware remains unknown and invalid motor telemetry is not presented as valid zero data. Three consecutive poll failures trigger safe re-detection, supporting a controlled motor replacement.
+- Connected the motor driver to the real sampler and startup path; the previous implementation had `g_motor` declared but never initialized or polled, so RPM/torque were always zero.
+- Added MQTT motor identity metadata to state heartbeats and `MOTOR_IDENTIFIED` events. Added current identity fields to `device` and an auditable/coalesced `device_motor_identity` history table, retaining model, protocol, serial where available, first/last seen and observation count.
+- Added a detected-motor column to the Devices page. IKA type-plate serial is explicitly left unavailable because it is not exposed by the supplied IKA command table.
+- Added the detailed protocol and commissioning document at `firmware/docs/MOTOR_AUTO_DETECTION.md`.
+
+### Motor verification evidence
+
+- Backend strict typecheck, build, zero-warning lint and tests passed.
+- Frontend strict typecheck, zero-warning lint and production build passed; the existing approximately 1.9 MB bundle warning remains non-failing.
+- Migration `MotorIdentity1730000000014` ran successfully on the live sandbox PostgreSQL database; all five current motor columns and `device_motor_identity` were verified.
+- Live Mosquitto smoke test published an IKA heartbeat, confirmed current-device persistence and history creation, repeated it to confirm observation coalescing, then published a Heidolph heartbeat and confirmed current identity replacement plus two retained historical identities.
+- ESP-IDF firmware compilation and physical RS-232 tests remain required on the target hardware/toolchain; they were not possible in this sandbox.
