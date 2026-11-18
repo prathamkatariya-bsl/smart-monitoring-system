@@ -5,9 +5,9 @@
 - Module: DWIN DMG48320C035_03WN commercial-grade 3.5-inch Smart LCM.
 - Native resolution: 320×480 portrait.
 - Firmware-owned UART: existing DWIN UART at 115200 8N1.
-- Source contract: `RMP_HMI/DGUS_Assets_320x480_DRAFT/`.
+- Source contract: `RMP_HMI/DGUS_Assets_320x480/`.
 
-The draft package contains 320×480 backgrounds, the coordinate/layout manifest, scaled VP map and project metadata. It is the current migration contract for UI/UX review; it is not a final released `DWIN_SET` until generated and bench-tested on the exact display.
+The supplied v3 package contains the current 320×480 backgrounds, icon libraries, placement maps, VP contract, serial frames and QA material. It is the active source package; it is not a final released `DWIN_SET` until DGUS generates the panel binaries and the result is bench-tested on the exact display.
 
 ## Navigation contract
 
@@ -23,7 +23,7 @@ The firmware owns focus and diagnostics-window VPs and writes them atomically so
 ## Release workflow
 
 1. UI/UX updates the current 320×480 source artwork and manifest.
-2. Run `python tools/migrate_dgus_320x480.py` only when regenerating migration outputs.
+2. Run the supplied QA scripts from `RMP_HMI/DGUS_Assets_320x480/` when validating the package.
 3. Open the project in the approved DGUS tool and generate the final binary package.
 4. Validate page geometry, VP addresses, touch-return frames, fonts and text clearing on the exact panel.
 5. Test all button paths, safe MODE exit, alarm lockout and power-cycle recovery.

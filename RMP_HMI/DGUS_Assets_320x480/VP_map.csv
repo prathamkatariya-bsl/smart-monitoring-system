@@ -1,0 +1,101 @@
+vp_hex,name,widget,page,x,y,w,h,bytes,cell_wxh,style,align,color,rgb565,max_chars,icon_lib,values_or_notes,direction,rate,status
+0x1060,fw_version,Text Display,0,12,412,160,20,18,10x20,V-S,l,#8196BC,84B7,16,,FW v0.1.0-p4,ESP32->DWIN,once at boot,active
+0x1100,temp_value,Text Display,6,64,170,168,56,8,28x56,V-HERO,r,#00F0FF,079F,6,,250.2,ESP32->DWIN,1 Hz,active
+0x1130,rpm_value,Text Display,6,24,280,120,40,8,20x40,V-XL,l,#F4F7FC,F7BF,6,,1500,ESP32->DWIN,1 Hz,active
+0x1140,torque_value,Text Display,6,180,280,120,40,8,20x40,V-XL,l,#F4F7FC,F7BF,6,,200.5,ESP32->DWIN,1 Hz,active
+0x1170,alarm_rate,Text Display,7,96,216,140,40,10,20x40,V-XL,r,#FFFFFF,FFFF,7,,+105.2,ESP32->DWIN,1 Hz,active
+0x1180,alarm_param,Text Display,7,24,68,264,24,24,12x24,V-M,l,#FDE047,FF08,22,,THERMAL RUNAWAY,ESP32->DWIN,on alarm,active
+0x1190,alarm_temp,Text Display,7,68,104,168,56,8,28x56,V-HERO,r,#FFFFFF,FFFF,6,,250.2,ESP32->DWIN,1 Hz,active
+0x11A0,alarm_limit,Text Display,7,164,184,72,24,8,12x24,V-M,r,#FCA5A5,FD34,6,,+99.0,ESP32->DWIN,on alarm,active
+0x11C0,duration,Text Display,6,24,368,160,40,10,20x40,V-XL,l,#F4F7FC,F7BF,8,,01:24:10,ESP32->DWIN,every 1 s,active
+0x1301,temp_quality_pill,Icon Display (variable icon),6,200,142,96,28,2,,,,,,,34,0=GOOD; 1=SUSPECT; 2=BAD,ESP32->DWIN,1 Hz,active
+0x1306,boot_progress,Progress Bar Display,0,12,384,296,8,2,,,,#00F0FF,079F,,,0..100 (%),ESP32->DWIN,on change,active
+0x1307,run_footer,Icon Display (variable icon),6,12,432,296,24,2,,,,,,,38,0=hint; 1=silenced,ESP32->DWIN,on change,active
+0x1308,alarm_header_flash,Icon Display (variable icon),7,0,0,320,48,2,,,,,,,36,0=bright; 1=dim,ESP32->DWIN,toggle 1 Hz while alarm active,active
+0x1309,mute_button,Icon Display (variable icon),7,6,406,308,68,2,,,,,,,37,0=SILENCE (focus); 1=SILENCED (disabled); 2=SILENCE (normal),ESP32->DWIN,on change,active
+0x130A,audit_state,Icon Display (variable icon),8,24,344,272,24,2,,,,,,,39,0=saving; 1=stored,ESP32->DWIN,on change,active
+0x1310,diag_dot_0,Icon Display (variable icon),9,24,68,12,12,2,,,,,,,35,0=good; 1=suspect; 2=bad; 3=off,ESP32->DWIN,on change,active
+0x1311,diag_dot_1,Icon Display (variable icon),9,24,136,12,12,2,,,,,,,35,0=good; 1=suspect; 2=bad; 3=off,ESP32->DWIN,on change,active
+0x1312,diag_dot_2,Icon Display (variable icon),9,24,204,12,12,2,,,,,,,35,0=good; 1=suspect; 2=bad; 3=off,ESP32->DWIN,on change,active
+0x1313,diag_dot_3,Icon Display (variable icon),9,24,272,12,12,2,,,,,,,35,0=good; 1=suspect; 2=bad; 3=off,ESP32->DWIN,on change,active
+0x1314,diag_dot_4,Icon Display (variable icon),9,24,340,12,12,2,,,,,,,35,0=good; 1=suspect; 2=bad; 3=off,ESP32->DWIN,on change,active
+0x1320,diag_row_0,Icon Display (variable icon),9,8,52,288,68,2,,,,,,,45,0=normal; 1=focus,ESP32->DWIN,on change,active
+0x1321,diag_row_1,Icon Display (variable icon),9,8,120,288,68,2,,,,,,,45,0=normal; 1=focus,ESP32->DWIN,on change,active
+0x1322,diag_row_2,Icon Display (variable icon),9,8,188,288,68,2,,,,,,,45,0=normal; 1=focus,ESP32->DWIN,on change,active
+0x1323,diag_row_3,Icon Display (variable icon),9,8,256,288,68,2,,,,,,,45,0=normal; 1=focus,ESP32->DWIN,on change,active
+0x1324,diag_row_4,Icon Display (variable icon),9,8,324,288,68,2,,,,,,,45,0=normal; 1=focus,ESP32->DWIN,on change,active
+0x1325,diag_scroll,Icon Display (variable icon),9,300,56,6,336,2,,,,,,,46,0=rows 1-5; 1=rows 2-6; 2=rows 3-7,ESP32->DWIN,on change,active
+0x1330,btn_accept,Icon Display (variable icon),2,6,346,308,68,2,,,,,,,40,0=normal; 1=focus; 2=disabled,ESP32->DWIN,on change,active
+0x1331,btn_reject,Icon Display (variable icon),2,6,418,308,56,2,,,,,,,41,0=normal; 1=focus; 2=disabled,ESP32->DWIN,on change,active
+0x1332,btn_start,Icon Display (variable icon),5,6,346,308,68,2,,,,,,,42,0=normal; 1=focus; 2=disabled,ESP32->DWIN,on change,active
+0x1333,btn_cancel,Icon Display (variable icon),5,6,418,308,56,2,,,,,,,43,0=normal; 1=focus; 2=disabled,ESP32->DWIN,on change,active
+0x1334,btn_return,Icon Display (variable icon),9,6,406,308,68,2,,,,,,,44,0=normal; 1=focus; 2=disabled,ESP32->DWIN,on change,active
+0x2000,reactor_title,Text Display,1,168,14,140,20,16,10x20,V-S,r,#FFFFFF,FFFF,14,,Reactor 25,ESP32->DWIN,on change,active
+0x2000,reactor_title,Text Display,2,168,14,140,20,16,10x20,V-S,r,#FFFFFF,FFFF,14,,Reactor 25,ESP32->DWIN,on change,active
+0x2000,reactor_title,Text Display,5,168,14,140,20,16,10x20,V-S,r,#FFFFFF,FFFF,14,,Reactor 25,ESP32->DWIN,on change,active
+0x2000,reactor_title,Text Display,6,168,14,140,20,16,10x20,V-S,r,#FFFFFF,FFFF,14,,Reactor 25,ESP32->DWIN,on change,active
+0x2000,reactor_title,Text Display,8,168,14,140,20,16,10x20,V-S,r,#FFFFFF,FFFF,14,,Reactor 25,ESP32->DWIN,on change,active
+0x2020,lab_name,Text Display,1,12,14,140,20,16,10x20,V-S,l,#FFFFFF,FFFF,14,,QC Lab 1,ESP32->DWIN,on change,active
+0x2020,lab_name,Text Display,2,12,14,140,20,16,10x20,V-S,l,#FFFFFF,FFFF,14,,QC Lab 1,ESP32->DWIN,on change,active
+0x2020,lab_name,Text Display,5,12,14,140,20,16,10x20,V-S,l,#FFFFFF,FFFF,14,,QC Lab 1,ESP32->DWIN,on change,active
+0x2020,lab_name,Text Display,6,12,14,140,20,16,10x20,V-S,l,#FFFFFF,FFFF,14,,QC Lab 1,ESP32->DWIN,on change,active
+0x2020,lab_name,Text Display,8,12,14,140,20,16,10x20,V-S,l,#FFFFFF,FFFF,14,,QC Lab 1,ESP32->DWIN,on change,active
+0x2040,clock,Text Display,6,246,344,50,20,8,10x20,V-S,r,#9DB0CF,9D99,5,,14:32,ESP32->DWIN,every 1 s,active
+0x2050,device_uuid,Text Display,4,24,176,264,24,24,12x24,V-M,l,#00F0FF,079F,22,,01a1af2d...6bc7,ESP32->DWIN,once,active
+0x3000,analyst_name,Text Display,1,24,112,272,32,20,16x32,V-L,c,#F4F7FC,F7BF,17,,Unassigned,ESP32->DWIN,on assignment,active
+0x3000,analyst_name,Text Display,2,24,112,272,32,20,16x32,V-L,c,#10B981,15D0,17,,Deepa Nair,ESP32->DWIN,on assignment,active
+0x3000,analyst_name,Text Display,5,24,60,272,32,20,16x32,V-L,l,#00F0FF,079F,17,,Deepa Nair,ESP32->DWIN,on assignment,active
+0x3000,analyst_name,Text Display,6,24,60,272,32,20,16x32,V-L,l,#00F0FF,079F,17,,Deepa Nair,ESP32->DWIN,on assignment,active
+0x3000,analyst_name,Text Display,8,24,60,272,32,20,16x32,V-L,l,#00F0FF,079F,17,,Deepa Nair,ESP32->DWIN,on assignment,active
+0x3010,accept (value 0),Touch: Return Key Code (optional),2,12,352,296,56,2,,,,,,,,SELECT on ACCEPT,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3010,reject (value 1),Touch: Return Key Code (optional),2,12,424,296,44,2,,,,,,,,SELECT on REJECT,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3020,process_name,Text Display,1,24,236,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,Process Unassigned,ESP32->DWIN,on assignment,active
+0x3020,process_name,Text Display,2,24,236,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,Synthesis Batch B-42,ESP32->DWIN,on assignment,active
+0x3020,process_name,Text Display,5,24,96,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,Synthesis Batch B-42,ESP32->DWIN,on assignment,active
+0x3020,process_name,Text Display,6,24,96,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,Synthesis Batch B-42,ESP32->DWIN,on assignment,active
+0x3020,process_name,Text Display,8,24,96,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,Synthesis Batch B-42,ESP32->DWIN,on assignment,active
+0x3030,start (value 0),Touch: Return Key Code (optional),5,12,352,296,56,2,,,,,,,,SELECT on START,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3030,cancel (value 1),Touch: Return Key Code (optional),5,12,424,296,44,2,,,,,,,,SELECT on CANCEL,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3040,silence siren (value 1),Touch: Return Key Code (optional),7,12,412,296,56,2,,,,,,,,SELECT,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3050,release (value 1),Touch: Return Key Code (optional),8,12,412,296,56,2,,,,,,,,SELECT,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3060,return (value 1),Touch: Return Key Code (optional),9,12,412,296,56,2,,,,,,,,SELECT on RETURN,DWIN->ESP32,on press,optional (no-touch module: never fires)
+0x3080,max_temp,Text Display,5,176,158,60,24,8,12x24,V-M,r,#F4F7FC,F7BF,5,,250.0,ESP32->DWIN,on assignment,active
+0x3090,max_speed,Text Display,5,176,218,60,24,8,12x24,V-M,r,#F4F7FC,F7BF,5,,1500,ESP32->DWIN,on assignment,active
+0x30A0,max_roc,Text Display,5,176,278,60,24,8,12x24,V-M,r,#F59E0B,F4E1,5,,+5.0,ESP32->DWIN,on assignment,active
+0x3100,total_duration,Text Display,8,166,204,96,24,10,12x24,V-M,r,#F4F7FC,F7BF,8,,02:45:18,ESP32->DWIN,once,active
+0x3110,final_temp,Text Display,8,166,256,96,24,10,12x24,V-M,r,#F4F7FC,F7BF,8,,24.2,ESP32->DWIN,once,active
+0x3120,samples_logged,Text Display,8,166,308,96,24,10,12x24,V-M,r,#F4F7FC,F7BF,8,,"9,918",ESP32->DWIN,once,active
+0x3210,ip_address,Text Display,4,24,316,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,172.16.50.162,ESP32->DWIN,on change,active
+0x3220,mqtt_broker,Text Display,4,24,380,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,172.16.50.138:18883,ESP32->DWIN,on change,active
+0x3280,mac_address,Text Display,4,24,252,264,24,24,12x24,V-M,l,#F4F7FC,F7BF,22,,E8:F6:0A:E3:90:FB,ESP32->DWIN,once,active
+0x3290,diag_value_0,Text Display,9,24,86,252,24,24,12x24,V-M,l,#F4F7FC,F7BF,21,,BSL_PUNE,ESP32->DWIN,on change,active
+0x32A0,diag_value_1,Text Display,9,24,154,252,24,24,12x24,V-M,l,#F4F7FC,F7BF,21,,172.16.50.162,ESP32->DWIN,on change,active
+0x32B0,diag_value_2,Text Display,9,24,222,252,24,24,12x24,V-M,l,#F4F7FC,F7BF,21,,172.16.50.138:18883,ESP32->DWIN,on change,active
+0x32C0,diag_value_3,Text Display,9,24,290,252,24,24,12x24,V-M,l,#F4F7FC,F7BF,21,,CONNECTED (TLSv1.2),ESP32->DWIN,on change,active
+0x32D0,diag_value_4,Text Display,9,24,358,252,24,24,12x24,V-M,l,#F4F7FC,F7BF,21,,ACTIVE (430.0 Rref),ESP32->DWIN,on change,active
+0x3300,diag_caption_0,Text Display,9,44,64,80,20,10,10x20,V-S,l,#8196BC,84B7,8,,SSID,ESP32->DWIN,on change,active
+0x3310,diag_caption_1,Text Display,9,44,132,80,20,10,10x20,V-S,l,#8196BC,84B7,8,,IP,ESP32->DWIN,on change,active
+0x3320,diag_caption_2,Text Display,9,44,200,80,20,10,10x20,V-S,l,#8196BC,84B7,8,,MQTT,ESP32->DWIN,on change,active
+0x3330,diag_caption_3,Text Display,9,44,268,80,20,10,10x20,V-S,l,#8196BC,84B7,8,,mTLS,ESP32->DWIN,on change,active
+0x3340,diag_caption_4,Text Display,9,44,336,80,20,10,10x20,V-S,l,#8196BC,84B7,8,,RTD,ESP32->DWIN,on change,active
+0x1110,temp_raw,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1120,cal_tag,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1150,rpm_set,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1160,fault_code,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x11B0,trend_rate,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x11D0,batch_tag,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1305,torque_load_bar,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3070,scope_tag,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1300,temp_quality_dot (Running now uses pill 0x1301; dot lib 35 used by diagnostics slots),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3200,ssid (row-bound; replaced by slot 0x3290..),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3230,mtls_status (replaced by slots),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3240,ntp_status (row removed in v2.1),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3250,rtd_status (replaced by slots),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3260,rs232_status (replaced by slots),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x3270,flash_status (row removed in v2.1),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1315,dot_rtd (row-bound),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1316,dot_rs232 (row-bound),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1317,dot_flash (row-bound),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x1318,dot_mac (row-bound),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x2018,conn_pill (lib 33 exported; not placed on any v2.1 screen - owner decision pending),,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"
+0x2010,reserved since v2.0,,,,,,,,,,,,,,,,,,"RETIRED - address reserved, do not reuse"

@@ -22,7 +22,7 @@ See [`firmware/docs/MOTOR_AUTO_DETECTION.md`](../firmware/docs/MOTOR_AUTO_DETECT
 
 ## HMI and controls
 
-The current HMI target is portrait 320×480. UP/DOWN moves focus or scrolls, SELECT confirms/toggles and MODE exits without committing an uncommitted workflow change. Buttons use debounce and hold-repeat behavior. The current draft DGUS contract is under `RMP_HMI/DGUS_Assets_320x480_DRAFT/`.
+The current HMI target is portrait 320×480. UP/DOWN moves focus or scrolls, SELECT confirms/toggles and MODE exits without committing an uncommitted workflow change. Buttons use debounce and hold-repeat behavior. The current draft DGUS contract is under `RMP_HMI/DGUS_Assets_320x480/`.
 
 ## Build
 

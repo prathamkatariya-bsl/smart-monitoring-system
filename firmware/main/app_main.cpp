@@ -62,9 +62,9 @@ static uint32_t g_boot = 1;
 enum HmiScreen : uint8_t {
   SCREEN_BOOT = rmp::DWIN_PAGE_BOOT,              // Page 0
   SCREEN_IDLE = rmp::DWIN_PAGE_IDLE,              // Page 1
-  SCREEN_WIFI_SETUP = rmp::DWIN_PAGE_WIFI_SETUP,  // Page 2
-  SCREEN_UNBOUND = rmp::DWIN_PAGE_UNBOUND,        // Page 3
-  SCREEN_ASSIGNMENT = rmp::DWIN_PAGE_ASSIGNMENT,  // Page 4
+  SCREEN_WIFI_SETUP = rmp::DWIN_PAGE_WIFI_SETUP,  // Page 3
+  SCREEN_UNBOUND = rmp::DWIN_PAGE_UNBOUND,        // Page 4
+  SCREEN_ASSIGNMENT = rmp::DWIN_PAGE_ASSIGNMENT,  // Page 2
   SCREEN_PRESTART = rmp::DWIN_PAGE_PRESTART,      // Page 5
   SCREEN_RUNNING = rmp::DWIN_PAGE_RUNNING,        // Page 6
   SCREEN_ALARM = rmp::DWIN_PAGE_ALARM,            // Page 7
@@ -200,7 +200,7 @@ static void onServerCfgDesired(const char *json_data, size_t len) {
     }
   } else {
     // Device was UNBOUND from reactor by server!
-    ESP_LOGI("rmp_fw", "Device unbound from reactor by server! Switching to Page 3 (UNBOUND)");
+    ESP_LOGI("rmp_fw", "Device unbound from reactor by server! Switching to Page 4 (DEVICE NOT CLAIMED)");
     g_bound = false;
     char devid[40] = {0};
     rmp::Prov::getDeviceId(devid, sizeof devid);
@@ -266,14 +266,15 @@ static void onServerCfgDesired(const char *json_data, size_t len) {
       if (strcmp(status->valuestring, "SCHEDULED") == 0) {
         if (g_screen != SCREEN_RUNNING && g_screen != SCREEN_ALARM) {
           g_screen = SCREEN_ASSIGNMENT;
-          g_dwin.showAssignmentPage(g_analyst_name, g_scope_tag,
+          g_dwin.showAssignmentPage(g_analyst_name, g_lab_name, g_reactor_title,
                                     g_process_name);
           g_dwin.setPage(DWIN_PAGE_ASSIGNMENT);
         }
       } else if (strcmp(status->valuestring, "ACCEPTED") == 0) {
         if (g_screen == SCREEN_ASSIGNMENT) {
           g_screen = SCREEN_PRESTART;
-          g_dwin.showPreStartPage(g_process_name, g_max_temp, g_max_rpm,
+          g_dwin.showPreStartPage(g_analyst_name, g_lab_name, g_reactor_title,
+                                  g_process_name, g_max_temp, g_max_rpm,
                                   g_max_temp_roc);
           g_dwin.setPage(DWIN_PAGE_PRESTART);
         }
@@ -288,7 +289,8 @@ static void onServerCfgDesired(const char *json_data, size_t len) {
           char dur_str[16];
           int64_t dur_ms = (esp_timer_get_time() / 1000) - g_attempt_start_ms;
           formatDuration(dur_ms, dur_str, sizeof(dur_str));
-          g_dwin.showBatchCompletedPage(g_process_name, dur_str, g_current_temp,
+          g_dwin.showBatchCompletedPage(g_process_name, g_lab_name, g_reactor_title,
+                                        g_analyst_name, dur_str, g_current_temp,
                                         g_samples_logged, true);
           g_dwin.setPage(DWIN_PAGE_COMPLETED);
         }
@@ -372,13 +374,17 @@ static void returnFromDiagnostics() {
 static void stepFocus(int direction) {
   if (g_screen == SCREEN_DIAGNOSTICS) {
     if (direction > 0) {
-      if (g_diag_focus < 2) {
+      if (g_diag_focus < 4) {
         ++g_diag_focus;
-      } else if (g_diag_window_top < 6) {
+      } else if (g_diag_window_top < 2) {
         ++g_diag_window_top;
+      } else {
+        g_diag_focus = 5; // RETURN action
       }
     } else {
-      if (g_diag_focus > 0) {
+      if (g_diag_focus == 5) {
+        g_diag_focus = 4;
+      } else if (g_diag_focus > 0) {
         --g_diag_focus;
       } else if (g_diag_window_top > 0) {
         --g_diag_window_top;
@@ -404,7 +410,9 @@ static void acceptAssignment(uint32_t now_ms, int64_t ts, bool synced) {
   g_mqtt.publishEvent("ASSIGNMENT_ACCEPTED", g_boot, now_ms, ts, synced, detail);
   g_screen = SCREEN_PRESTART;
   g_hmi_focus = 0;
-  g_dwin.showPreStartPage(g_process_name, g_max_temp, g_max_rpm, g_max_temp_roc);
+  g_dwin.showPreStartPage(g_analyst_name, g_lab_name, g_reactor_title,
+                              g_process_name, g_max_temp, g_max_rpm,
+                              g_max_temp_roc);
   g_dwin.setPage(DWIN_PAGE_PRESTART);
   syncNavigationUi();
 }
@@ -505,8 +513,12 @@ static void buttonTask(void *) {
         } else if (g_screen == SCREEN_COMPLETED) {
           showScreen(SCREEN_IDLE);
         } else if (g_screen == SCREEN_DIAGNOSTICS) {
-          ESP_LOGI("rmp_btn", "Diagnostics detail acknowledged for row %u",
-                   (unsigned)(g_diag_window_top + g_diag_focus + 1));
+          if (g_diag_focus == 5) {
+            returnFromDiagnostics();
+          } else {
+            ESP_LOGI("rmp_btn", "Diagnostics detail acknowledged for row %u",
+                     (unsigned)(g_diag_window_top + g_diag_focus + 1));
+          }
         }
         syncNavigationUi();
       }
@@ -654,7 +666,8 @@ static void samplerTask(void *) {
         tq_pct = 100;
       uint16_t qual_pill = (rf == 0) ? 0 : 2; // 0=GOOD, 2=BAD
 
-      g_dwin.showRunningPage(g_reactor_title, clockStr, is_online, qual_pill,
+      g_dwin.showRunningPage(g_reactor_title, g_lab_name, g_analyst_name,
+                             g_process_name, clockStr, is_online, qual_pill,
                              t_eval, t_raw, rf == 0, rpm, g_max_rpm, tq, tq_pct,
                              motor_ok, rate, "BATCH-01", durationStr, rf,
                              g_alarm_silenced);
